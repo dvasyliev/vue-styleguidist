@@ -1,6 +1,7 @@
 import * as path from 'path'
 import typescript from 'rollup-plugin-typescript2'
 import commonjs from 'rollup-plugin-commonjs'
+import resolveNode from 'rollup-plugin-node-resolve'
 import pkg from './package.json'
 
 const resolve = _path => path.resolve(__dirname, _path)
@@ -18,6 +19,7 @@ export default {
 		}
 	],
 	plugins: [
+		resolveNode(),
 		// Compile TypeScript files
 		typescript({
 			useTsconfigDeclarationDir: true,
@@ -27,5 +29,5 @@ export default {
 		// Allow bundling cjs modules (unlike webpack, rollup doesn't understand cjs)
 		commonjs()
 	],
-	external: [...Object.keys(pkg.dependencies || {})]
+	external: Object.keys(pkg.dependencies).filter(d => !['buble', 'acorn'].includes(d))
 }
